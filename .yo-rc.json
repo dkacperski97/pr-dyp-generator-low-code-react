@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Damian Kacperski",
+      "authorEmail": "7dami77@gmail.com",
+      "authorUrl": ""
+    }
+  }
+}
