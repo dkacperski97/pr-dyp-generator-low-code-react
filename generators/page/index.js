@@ -1,5 +1,6 @@
 'use strict';
 const Generator = require('yeoman-generator');
+const ejs = require('ejs');
 
 module.exports = class extends Generator {
   constructor(args, opts) {
@@ -13,6 +14,12 @@ module.exports = class extends Generator {
   }
 
   writing() {
+    this.fs.copyTpl(
+      this.templatePath('page.tsx'),
+      this.destinationPath(this.options.output, 'src', 'pages', this.page.uniqueName.replace(/\s/g, "") + '.tsx'),
+      { page: this.page }
+    );
+
     this.page.layout.forEach((component) => {
       this.composeWith(require.resolve('../component'), {
           component: JSON.stringify(component),

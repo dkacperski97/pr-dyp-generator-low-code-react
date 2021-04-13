@@ -17,8 +17,8 @@ module.exports = class extends Generator {
   writing() {
     const component = components.find(component => component.id === this.component.componentId);
     this.fs.write(
-      this.destinationPath(this.options.output, component.id + '.tsx'),
-      ejs.render(component.template)
+      this.destinationPath(this.options.output, 'src', 'components', component.id + '.tsx'),
+      ejs.render(component.template, { config: this.component.config })
     );
   }
 };

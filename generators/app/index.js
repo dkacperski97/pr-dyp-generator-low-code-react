@@ -6,7 +6,6 @@ module.exports = class extends Generator {
     super(args, opts);
     this.option("output", {type: String});
     this.option("pages", {type: String});
-    this.destinationRoot(this.options.output);
   }
 
   initializing() {
@@ -17,11 +16,21 @@ module.exports = class extends Generator {
   }
 
   writing() {
+    this.spawnCommand('git', ['init']);
+    ['public', 'src', '.gitignore', 'package.json', 'README.md', 'tsconfig.json'].forEach(
+      name => this.fs.copyTpl(this.templatePath(name), this.destinationPath(this.options.output, name), { pages: this.pages })
+    );
+
     this.pages.forEach((page) => {
       this.composeWith(require.resolve('../page'), {
         page: JSON.stringify(page),
-        output: ""
+        output: this.options.output
       })
     })
+  }
+
+  install() {
+    // this.destinationRoot(this.options.output);
+    // this.npmInstall();
   }
 };
