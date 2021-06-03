@@ -19,7 +19,7 @@ module.exports = class extends Generator {
       name => this.fs.copyTpl(
         this.templatePath(name), 
         this.destinationPath(this.options.output, name), 
-        { helpers, site: this.site }
+        { helpers, site: this.site, pathToComponents: "./", pathToHooks: "./" }
       )
     );
 
@@ -27,7 +27,8 @@ module.exports = class extends Generator {
       this.composeWith(require.resolve('../component'), {
         site: this.options.site,
         component: JSON.stringify(component),
-        output: this.options.output
+        output: this.options.output + '/src/components',
+        pathToComponents: "../",
       })
     })
 
@@ -35,7 +36,9 @@ module.exports = class extends Generator {
       this.composeWith(require.resolve('../hook'), {
           site: this.options.site,
           variable: JSON.stringify(variable),
-          output: this.options.output
+          output: this.options.output + '/src/hooks',
+          pathToComponents: "../", 
+          pathToHooks: "./"
       })
     })
   }

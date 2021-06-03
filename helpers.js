@@ -11,18 +11,39 @@ const getHookName = (variable) => `use${u(variable.name)}`
 const getComponentName = (component) => u(component.name)
 
 const getComponentImport = (c, path) => `import ${getComponentName(c)} from "${path}components/${getComponentName(c)}";\n`
-const getComponentsImports = (site, item) =>
+const getComponentsImports = (site, item, path) =>
     item.children
-        .map(child => site.component.find(c => c.id === child))
-        .map((c) => getComponentImport(c, './'))
+        .map(child => site.components.find(c => c.id === child))
+        .map((c) => getComponentImport(c, path))
         .join("");
 const getVariableImport = (v, path) => `import ${getHookName(v)} from "${path}hooks/${getHookName(v)}";\n`
-const getVariablesImports = (site, item) =>
-    item.variables.map((v) => getVariableImport(v, './')).join('')
+const getVariablesImports = (site, item, path) =>
+    item.variables.map((v) => getVariableImport(v, path)).join('')
 
+const getComponents = (site, item) => {
+    const getComponentProps = (c) => c.variables.filter(v => v.templateId === 'prop').map(hook => {
+        const c = site.components.find((c) => c.variables.find((v) => v.id === hook.templateParameters.variable))
+        const v = c.variables.find((v) => v.id === hook.templateParameters.variable)
+        return `${getVariableName(v)}={${getVariableName(v)}} ${getVariableSetter(v)}={${getVariableSetter(v)}} `
+    }).join("");
+    const getComponentTag = (c) =>
+        `<${getComponentName(c)} ${getComponentProps(c)}/>\n`
+
+    return item.children
+        .map(child => site.components.find(c => c.id === child))
+        .map(getComponentTag)
+        .join("");
+}
 const getVariables = (site, item) => 
-    item.variables.map(v => `const [${getVariable(v)}] = ${getHookName(v)}();\n`).join('')
-
+    item.variables.map(v => `const [${getVariable(v)}] = ${getHookName(v)}(props);\n`).join('')
+const getOption = (site, item, name) => {
+    const v = item.variables.find(v => v.id === item.options[name])
+    return v ? getVariableName(v) : 'undefined';
+}
+const getOptionSetter = (site, item, name) => {
+    const v = item.variables.find(v => v.id === item.options[name])
+    return v ? getVariableSetter(v) : 'console.log';
+}
 //------------------------------------------------------
 
 // const isGlobalVariable = (name) => true;
@@ -52,5 +73,8 @@ module.exports = {
     getComponentsImports,
     getVariableImport,
     getVariablesImports,
+    getComponents,
     getVariables,
+    getOption,
+    getOptionSetter,
 }

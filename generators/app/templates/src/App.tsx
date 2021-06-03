@@ -4,10 +4,10 @@ import {
     Route,
     Switch,
 } from "react-router-dom";
-<%- helpers.getVariablesImports(site, site) %>
+<%- helpers.getVariablesImports(site, site, pathToHooks) %>
 
 
-const App: React.FC = () => {
+const App: React.FC = (props = {}) => {
 <%- helpers.getVariables(site, site) %>
 
   return (

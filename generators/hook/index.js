@@ -10,11 +10,15 @@ module.exports = class extends Generator {
     this.option("output", {type: String});
     this.option("variable", {type: String});
     this.option("site", {type: String});
+    this.option("pathToComponents", {type: String});
+    this.option("pathToHooks", {type: String});
   }
 
   initializing() {
     this.site = JSON.parse(this.options.site);
     this.variable = JSON.parse(this.options.variable);
+    this.pathToComponents = this.options.pathToComponents;
+    this.pathToHooks = this.options.pathToHooks;
   }
 
   writing() {
@@ -24,7 +28,13 @@ module.exports = class extends Generator {
     console.log(this.variable)
     this.fs.write(
       this.destinationPath(this.options.output, helpers.getHookName(this.variable), 'index.tsx'),
-      ejs.render(hook.getTemplate(), { helpers, site: this.site, hook: this.variable })
+      ejs.render(hook.getTemplate(), { 
+        helpers, 
+        site: this.site, 
+        hook: this.variable,
+        pathToComponents: this.pathToComponents + "../",
+        pathToHooks: this.pathToHooks + "../"
+      })
     );
   }
 };
