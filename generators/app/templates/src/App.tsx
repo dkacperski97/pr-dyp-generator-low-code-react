@@ -1,24 +1,23 @@
-<%
-const getPageUrl = (page) => page.uniqueName.toLowerCase().replace(/\s/g, "-")
-const getPageName = (page) => page.uniqueName.replace(/\s/g, "")
-%>
 import React from 'react';
 import {
     BrowserRouter as Router,
     Route,
     Switch,
 } from "react-router-dom";
-<%- pages.map(page => `import ${getPageName(page)} from './pages/${getPageName(page)}';`).join('\n') %>
+<%- helpers.getVariablesImports(site, site) %>
+
 
 const App: React.FC = () => {
+<%- helpers.getVariables(site, site) %>
+
   return (
     <Router>
         <Switch>
-<% pages.forEach(page => { %>
-            <Route path="/<%= getPageUrl(page) %>">
-                <<%= getPageName(page) %> />
+          {routes.map((r) => (
+            <Route key={r.url} path={r.url}>
+              {r.component}
             </Route>
-<% }) %>
+          ))}
         </Switch>
     </Router>
   );

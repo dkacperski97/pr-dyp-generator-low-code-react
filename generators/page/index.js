@@ -1,5 +1,6 @@
 'use strict';
 const Generator = require('yeoman-generator');
+const helpers = require('../../helpers');
 const ejs = require('ejs');
 
 module.exports = class extends Generator {
@@ -17,7 +18,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath('page.tsx'),
       this.destinationPath(this.options.output, 'src', 'pages', this.page.uniqueName.replace(/\s/g, "") + '.tsx'),
-      { page: this.page }
+      { helpers, page: this.page }
     );
 
     this.page.layout.forEach((component) => {

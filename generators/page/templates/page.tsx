@@ -16,10 +16,10 @@ const mainId = page.layout.find(c => c.componentId === 'main').id;
 import React from 'react';
 <%- page.layout.map(c => c.componentId).map(id => `import ${getComponentTag(id)} from '../components/${id}';`).join('\n') %>
 
-const <%= page.uniqueName.replace(/\s/g, "") %>: React.FC = () => {
+const <%- page.uniqueName.replace(/\s/g, "") %>: React.FC = () => {
 	return (
         <%- createJsx(page.layout, mainId) %>
 	)
 }
 
-export default <%= page.uniqueName.replace(/\s/g, "") %>;
+export default <%- page.uniqueName.replace(/\s/g, "") %>;
