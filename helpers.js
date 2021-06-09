@@ -34,8 +34,9 @@ const getComponents = (site, item) => {
         .map(getComponentTag)
         .join("");
 }
+const getVariableInput = (item, index) => item.variables.slice(0, index).map(v => `${getVariable(v)}`).join(', ');
 const getVariables = (site, item) => 
-    item.variables.map(v => `const [${getVariable(v)}] = ${getHookName(v)}(props);\n`).join('')
+    item.variables.map((v, i) => `const [${getVariable(v)}] = ${getHookName(v)}(props, { ${getVariableInput(item, i)} });\n`).join('')
 const getOption = (site, item, name) => {
     const v = item.variables.find(v => v.id === item.options[name])
     return v ? getVariableName(v) : 'undefined';
