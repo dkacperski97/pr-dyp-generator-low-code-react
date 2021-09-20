@@ -6,10 +6,13 @@ const options = {
     entry: path.resolve(__dirname, './src/index.tsx'),
     devtool: process.env.NODE_ENV !== 'production' ? 'eval' : undefined,
     devServer: {
+      hot: true,
       static: {
         directory: path.join(__dirname, "dist"),
       },
       port: 3001,
+      liveReload: false,
+      headers: { "Access-Control-Allow-Origin": "http://localhost:3000" }
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.jsx', '.js'],
@@ -26,11 +29,11 @@ const options = {
         {
           test: /\.(ts|js)x?$/,
           exclude: /node_modules/,
-          use: [
-            {
-              loader: 'babel-loader',
-            },
-          ],
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-react","@babel/preset-typescript"],
+            plugins: [require.resolve("react-refresh/babel")],
+          },
         },
         {
           test: /\.css$/,

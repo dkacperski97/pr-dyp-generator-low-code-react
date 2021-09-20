@@ -15,7 +15,7 @@ module.exports = class extends Generator {
 
   writing() {
     this.spawnCommand('git', ['init']);
-    ['public', 'src', '.babelrc', '.gitignore', 'package.json', 'README.md', 'tsconfig.json', 'webpack.common.js', 'webpack.config.js'].forEach(
+    ['public', 'src', '.gitignore', 'package.json', 'README.md', 'tsconfig.json', 'webpack.common.js', 'webpack.config.js'].forEach(
       name => this.fs.copyTpl(
         this.templatePath(name), 
         this.destinationPath(this.options.output, name), 
