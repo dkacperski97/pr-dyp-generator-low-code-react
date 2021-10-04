@@ -1,2 +1,18 @@
 import React from 'react';
-<%- site.components.map(c => helpers.getComponentName(c)).map(name => `export const ${name} = React.lazy(() => import('./${name}'));`).join('\n') %>
+const Pages: {[key: string]: React.LazyExoticComponent<React.ComponentType>} = {
+<%- site.components.map(c => helpers.getComponentName(c)).filter(name => name[0] === 'P').map(name => `"${name}": React.lazy<React.ComponentType>(() => import('./${name}')),`).join('\n') %>
+};
+
+type PageViewerProps = {
+    name: string;
+};
+const PageViewer: React.FC<PageViewerProps> = ({ name }) => {
+    const Page = Pages[name];
+    return Page ? (
+        <React.Suspense fallback="Loading Button">
+            <Page />
+        </React.Suspense>
+    ) : null;
+}
+
+export default PageViewer;

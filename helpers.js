@@ -10,7 +10,7 @@ const getVariable = (variable) => `${getVariableName(variable)}, ${getVariableSe
 const getHookName = (variable) => `use${u(variable.name)}`
 const getComponentName = (component) => u(component.name)
 
-const getComponentImport = (c, path) => `import ${getComponentName(c)} from "${path}components/${getComponentName(c)}";\n`
+const getComponentImport = (c, path) => `const ${getComponentName(c)} = React.lazy(() => import("${path}components/${getComponentName(c)}"));\n`
 const getComponentsImports = (site, item, path) =>
     item.children
         .map(child => site.components.find(c => c.id === child))
@@ -27,7 +27,7 @@ const getComponents = (site, item) => {
         return `${getVariableName(v)}={${getVariableName(v)}} ${getVariableSetter(v)}={${getVariableSetter(v)}} `
     }).join("");
     const getComponentTag = (c) =>
-        `<${getComponentName(c)} ${getComponentProps(c)}/>\n`
+        `<React.Suspense fallback={<div></div>}><${getComponentName(c)} ${getComponentProps(c)}/></React.Suspense>\n`
 
     return item.children
         .map(child => site.components.find(c => c.id === child))
