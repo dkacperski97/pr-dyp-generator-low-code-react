@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 const options = {
     mode: process.env.NODE_ENV || 'development',
@@ -59,6 +60,9 @@ const options = {
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, './public/index.html'),
         chunks: ["main"]
+      }),
+      new ReactRefreshWebpackPlugin({
+        exclude: [/node_modules/, /bootstrap\.(ts|js)$/],
       }),
     ],
 }

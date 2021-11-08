@@ -9,7 +9,7 @@ type PageViewerProps = {
 const PageViewer: React.FC<PageViewerProps> = ({ name }) => {
     const Page = Pages[name];
     return Page ? (
-        <React.Suspense fallback="Loading Button">
+        <React.Suspense fallback="">
             <Page />
         </React.Suspense>
     ) : null;

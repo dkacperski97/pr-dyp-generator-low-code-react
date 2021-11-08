@@ -15,7 +15,9 @@ const App: React.FC = (props = {}) => {
         <Switch>
           {routes.map((r) => (
             <Route key={r.url} path={r.url}>
-              {r.component}
+              <React.Suspense fallback="">
+                {r.component}
+              </React.Suspense>
             </Route>
           ))}
         </Switch>

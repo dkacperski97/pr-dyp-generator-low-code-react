@@ -1,7 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { ModuleFederationPlugin } = require('webpack').container;
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 const deps = require('./package.json').dependencies;
 
@@ -37,9 +36,6 @@ const options = {
           singleton: true,
         }, 
       }
-    }),
-    new ReactRefreshWebpackPlugin({
-      exclude: [/node_modules/, /bootstrap\.(ts|js)$/],
     }),
   ]
 }
