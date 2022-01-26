@@ -8,6 +8,7 @@ module.exports = class extends Generator {
   constructor(args, opts) {
     super(args, opts);
     this.option("output", {type: String});
+    this.option("component", {type: String});
     this.option("variable", {type: String});
     this.option("site", {type: String});
     this.option("pathToComponents", {type: String});
@@ -16,6 +17,7 @@ module.exports = class extends Generator {
 
   initializing() {
     this.site = JSON.parse(this.options.site);
+    this.component = this.options.component ? JSON.parse(this.options.component) : undefined;
     this.variable = JSON.parse(this.options.variable);
     this.pathToComponents = this.options.pathToComponents;
     this.pathToHooks = this.options.pathToHooks;
@@ -30,6 +32,7 @@ module.exports = class extends Generator {
       this.destinationPath(this.options.output, helpers.getHookName(this.variable), 'index.tsx'),
       ejs.render(hook.getTemplate(), { 
         helpers, 
+        component: this.component,
         site: this.site, 
         hook: this.variable,
         pathToComponents: this.pathToComponents + "../",

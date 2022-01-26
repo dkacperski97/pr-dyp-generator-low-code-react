@@ -35,6 +35,7 @@ module.exports = class extends Generator {
     this.component.variables.forEach((variable) => {
       this.composeWith(require.resolve('../hook'), {
           site: this.options.site,
+          component: this.options.component,
           variable: JSON.stringify(variable),
           output: this.options.output + '/' + helpers.getComponentName(this.component) + '/' + 'hooks',
           pathToComponents: this.pathToComponents + "../../", 

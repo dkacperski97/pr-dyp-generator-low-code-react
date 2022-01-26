@@ -15,7 +15,9 @@ const options = {
       filename: "remoteEntry.js",
       exposes: {
         './components': './src/components',
-        './Page1': './src/components/Page1'
+        './Page1': './src/components/Page1',
+        './SiteContext': './src/context/SiteContext',
+        './useClient': './src/hooks/useClient'
       },
       shared: {
         "react": {
@@ -29,12 +31,12 @@ const options = {
         "react-router-dom": {
           singleton: true,
         }, 
-        "@material-ui/core": {
+        "@material-ui/": {
           singleton: true,
-        }, 
-        "@material-ui/icons": {
+        },
+        "@apollo/client": {
           singleton: true,
-        }, 
+        }
       }
     }),
   ]

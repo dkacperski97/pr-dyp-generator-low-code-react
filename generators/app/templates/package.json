@@ -22,7 +22,8 @@
     "web-vitals": "^1.1.1"
   },
   "scripts": {
-    "start": "_PORT=\"${PORT:-3001}\" && webpack serve --port $_PORT --config webpack.config.js",
+    "start": "webpack serve --port 3001 --config webpack.config.js",
+    "start2": "_PORT=\"${PORT:-3001}\" && webpack serve --port $_PORT --config webpack.config.js  --no-hot",
     "build": "webpack --config webpack.config.js --mode=production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

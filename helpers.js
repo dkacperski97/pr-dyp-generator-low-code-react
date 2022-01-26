@@ -14,10 +14,11 @@ const getComponentImport = (c, path) => `const ${getComponentName(c)} = React.la
 const getComponentsImports = (site, item, path) =>
     item.children
         .map(child => site.components.find(c => c.id === child))
-        .map((c) => getComponentImport(c, path))
+        .map((c) => getComponentImport(c, path) + getComponentsImports(site, c, path))
         .join("");
 const getVariableImport = (v, path) => `import ${getHookName(v)} from "${path}hooks/${getHookName(v)}";\n`
 const getVariablesImports = (site, item, path) =>
+    (typeof item.name !== 'undefined' ? `import { SiteContext } from '../../${path}context/SiteContext';` : '') +
     item.variables.map((v) => getVariableImport(v, path)).join('')
 
 const getComponents = (site, item) => {
@@ -27,7 +28,9 @@ const getComponents = (site, item) => {
         return `${getVariableName(v)}={${getVariableName(v)}} ${getVariableSetter(v)}={${getVariableSetter(v)}} `
     }).join("");
     const getComponentTag = (c) =>
-        `<React.Suspense fallback={<div></div>}><${getComponentName(c)} ${getComponentProps(c)}/></React.Suspense>\n`
+        `<React.Suspense fallback={<div></div>}><${getComponentName(c)} ${getComponentProps(c)}>
+            ${getComponents(site, c)}
+        </${getComponentName(c)}></React.Suspense>\n`
 
     return item.children
         .map(child => site.components.find(c => c.id === child))
@@ -35,8 +38,21 @@ const getComponents = (site, item) => {
         .join("");
 }
 const getVariableInput = (item, index) => item.variables.slice(0, index).map(v => `${getVariable(v)}`).join(', ');
-const getVariables = (site, item) => 
-    item.variables.map((v, i) => `const [${getVariable(v)}] = ${getHookName(v)}(props, { ${getVariableInput(item, i)} });\n`).join('')
+const getVariableInputWithoutContext = (item) => item.variables.filter(v => v.templateId !== 'siteContext').map(v => `${getVariable(v)}`).join(', ');
+const getVariables = (site, item) => (typeof item.name !== 'undefined' ? 'const SiteContextValue = React.useContext(SiteContext);\n' : '') +
+    item.variables.map((v, i) => `const [${getVariable(v)}] = ${getHookName(v)}(props, { ${getVariableInput(item, i)} });\n`).join('') +
+    (typeof item.name !== 'undefined' ? `React.useEffect(() => {
+        if (SiteContextValue !== null) {
+            SiteContextValue.setComponents((prev: any) => ({
+                ...prev,
+                ["${getComponentName(item)}"]: { ${getVariableInputWithoutContext(item)} }
+            }));
+        }
+    }, [SiteContextValue?.setComponents, ${getVariableInputWithoutContext(item)}])
+    ${item.variables.filter(v => v.templateId === 'siteContext').length > 0 ? `
+    if (${item.variables.filter(v => v.templateId === 'siteContext').map(v => `${getVariableName(v)} === undefined`).join(' || ')}) {
+        return null;
+    }`:``}\n` : '');
 const getOption = (site, item, name) => {
     const v = item.variables.find(v => v.id === item.options[name])
     return v ? getVariableName(v) : 'undefined';
